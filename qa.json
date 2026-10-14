@@ -1,0 +1,72 @@
+[
+  {
+    "feature": "figures",
+    "caption": "The research note shows separate figure references.",
+    "note": "Research.md",
+    "eval": "app.plugins.plugins['pandoc-crossref-preview'].closeDialogs(); (async () => { const leaf = app.workspace.getLeaf(false); const state = leaf.getViewState(); await leaf.setViewState({type:'markdown',state:{...state.state,mode:'preview'}}); for(let n=0;n<50;n++){ if(leaf.view.containerEl.querySelector('.pcp-reference,.pcp-unresolved')) return 'references ready'; await new Promise(r=>setTimeout(r,100)); } throw new Error('No references rendered'); })()"
+  },
+  {
+    "feature": "equations",
+    "caption": "Equation numbers have a separate counter.",
+    "note": "Equations.md",
+    "eval": "app.plugins.plugins['pandoc-crossref-preview'].closeDialogs(); (async () => { const leaf = app.workspace.getLeaf(false); const state = leaf.getViewState(); await leaf.setViewState({type:'markdown',state:{...state.state,mode:'preview'}}); for(let n=0;n<50;n++){ if(leaf.view.containerEl.querySelector('.pcp-reference,.pcp-unresolved')) return 'references ready'; await new Promise(r=>setTimeout(r,100)); } throw new Error('No references rendered'); })()"
+  },
+  {
+    "feature": "forward",
+    "caption": "References resolve before their target definitions.",
+    "note": "Forward.md",
+    "eval": "app.plugins.plugins['pandoc-crossref-preview'].closeDialogs(); (async () => { const leaf = app.workspace.getLeaf(false); const state = leaf.getViewState(); await leaf.setViewState({type:'markdown',state:{...state.state,mode:'preview'}}); for(let n=0;n<50;n++){ if(leaf.view.containerEl.querySelector('.pcp-reference,.pcp-unresolved')) return 'references ready'; await new Promise(r=>setTimeout(r,100)); } throw new Error('No references rendered'); })()"
+  },
+  {
+    "feature": "issues",
+    "caption": "The free label report shows duplicate, missing and unsupported labels.",
+    "note": "Issues.md",
+    "eval": "app.plugins.plugins['pandoc-crossref-preview'].closeDialogs(); (async()=>{await app.plugins.plugins['pandoc-crossref-preview'].showReport();return 'report open';})()",
+    "after": "app.plugins.plugins['pandoc-crossref-preview'].closeDialogs(); 'closed'"
+  },
+  {
+    "feature": "protected",
+    "caption": "Code and URL text keep their literal syntax.",
+    "note": "Protected.md",
+    "eval": "app.plugins.plugins['pandoc-crossref-preview'].closeDialogs(); (async () => { const leaf = app.workspace.getLeaf(false); const state = leaf.getViewState(); await leaf.setViewState({type:'markdown',state:{...state.state,mode:'preview'}}); for(let n=0;n<50;n++){ if(leaf.view.containerEl.querySelector('.pcp-reference,.pcp-unresolved')) return 'references ready'; await new Promise(r=>setTimeout(r,100)); } throw new Error('No references rendered'); })()"
+  },
+  {
+    "feature": "profiles",
+    "caption": "Pro saves number and prefix profiles by project name.",
+    "note": "Research.md",
+    "eval": "app.plugins.plugins['pandoc-crossref-preview'].closeDialogs(); (async()=>{const p=app.plugins.plugins['pandoc-crossref-preview']; p.pro.opts.http=async()=>({status:200,json:{data:{viewer:{login:'demo-reader'},user:{sponsorshipForViewerAsSponsor:{isActive:true,isOneTimePayment:false,tier:{name:'$5 a month',monthlyPriceInCents:500}}}}}}); app.secretStorage.setSecret('pandoc-crossref-preview-github-token','gho_'+'0'.repeat(36)); await p.pro.refreshNow();p.settings.figurePrefix='Plate'; p.settings.figureStart=7;await p.saveProfile('Absorption paper');p.settings.figurePrefix='Figure';p.settings.figureStart=1;await p.saveProfile('Lab notebook');p.showProfiles();return 'profiles open';})()",
+    "after": "app.plugins.plugins['pandoc-crossref-preview'].closeDialogs(); app.plugins.plugins['pandoc-crossref-preview'].pro.signOut(); 'closed'"
+  },
+  {
+    "feature": "report",
+    "caption": "Pro saves a separate local label report.",
+    "note": "Research.md",
+    "eval": "app.plugins.plugins['pandoc-crossref-preview'].closeDialogs(); (async()=>{const p=app.plugins.plugins['pandoc-crossref-preview']; p.pro.opts.http=async()=>({status:200,json:{data:{viewer:{login:'demo-reader'},user:{sponsorshipForViewerAsSponsor:{isActive:true,isOneTimePayment:false,tier:{name:'$5 a month',monthlyPriceInCents:500}}}}}}); app.secretStorage.setSecret('pandoc-crossref-preview-github-token','gho_'+'0'.repeat(36)); await p.pro.refreshNow();const path=await p.saveReport();await app.workspace.getLeaf(false).openFile(app.vault.getFileByPath(path));document.querySelectorAll('.notice').forEach(n=>n.remove());return path;})()",
+    "after": "app.plugins.plugins['pandoc-crossref-preview'].pro.signOut(); 'signed out'"
+  },
+  {
+    "feature": "pandoc-crossref-preview",
+    "caption": "Read the research references and open the free label report.",
+    "frames": [
+      {
+        "note": "Research.md",
+        "eval": "app.plugins.plugins['pandoc-crossref-preview'].closeDialogs(); (async () => { const leaf = app.workspace.getLeaf(false); const state = leaf.getViewState(); await leaf.setViewState({type:'markdown',state:{...state.state,mode:'preview'}}); for(let n=0;n<50;n++){ if(leaf.view.containerEl.querySelector('.pcp-reference,.pcp-unresolved')) return 'references ready'; await new Promise(r=>setTimeout(r,100)); } throw new Error('No references rendered'); })()",
+        "hold": 1500
+      },
+      {
+        "note": "Equations.md",
+        "eval": "app.plugins.plugins['pandoc-crossref-preview'].closeDialogs(); (async () => { const leaf = app.workspace.getLeaf(false); const state = leaf.getViewState(); await leaf.setViewState({type:'markdown',state:{...state.state,mode:'preview'}}); for(let n=0;n<50;n++){ if(leaf.view.containerEl.querySelector('.pcp-reference,.pcp-unresolved')) return 'references ready'; await new Promise(r=>setTimeout(r,100)); } throw new Error('No references rendered'); })()",
+        "hold": 1500
+      },
+      {
+        "note": "Research.md",
+        "eval": "app.plugins.plugins['pandoc-crossref-preview'].closeDialogs(); (async()=>{await app.plugins.plugins['pandoc-crossref-preview'].showReport();return 'report open';})()",
+        "hold": 1500
+      },
+      {
+        "eval": "app.plugins.plugins['pandoc-crossref-preview'].closeDialogs(); 'closed'",
+        "hold": 800
+      }
+    ]
+  }
+]

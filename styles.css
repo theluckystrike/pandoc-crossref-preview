@@ -1,0 +1,23 @@
+.pcp-reference {
+	color: var(--link-color);
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.pcp-unresolved {
+	border-bottom: 1px dotted var(--text-warning);
+}
+
+.pcp-issue {
+	color: var(--text-warning);
+}
+
+.pcp-report {
+	max-height: 65vh;
+	overflow: auto;
+}
+
+.pcp-profile {
+	display: block;
+	margin-top: var(--size-4-2);
+}

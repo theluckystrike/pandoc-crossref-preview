@@ -1,0 +1,514 @@
+{
+  "slug": "pandoc-crossref-preview",
+  "module": "pandoc-crossref-preview/src/indexer",
+  "function": "previewSummary",
+  "cases": [
+    {
+      "name": "Second figure",
+      "acceptance": "A1",
+      "args": [
+        "![A](a.png){#fig:a}\n\n![B](b.png){#fig:b}\n\nSee @fig:b."
+      ],
+      "expected": {
+        "labels": [
+          "fig:a=1@1",
+          "fig:b=2@3"
+        ],
+        "references": [
+          "Figure 2"
+        ],
+        "issues": []
+      }
+    },
+    {
+      "name": "Two references in one sentence",
+      "acceptance": "A1",
+      "args": [
+        "![A](a.png){#fig:a}\n\nSee @fig:a and @fig:a."
+      ],
+      "expected": {
+        "labels": [
+          "fig:a=1@1"
+        ],
+        "references": [
+          "Figure 1",
+          "Figure 1"
+        ],
+        "issues": []
+      }
+    },
+    {
+      "name": "Equation with next-line label",
+      "acceptance": "A2",
+      "args": [
+        "$$\nx=1\n$$\n{#eq:a}\n\nSee @eq:a."
+      ],
+      "expected": {
+        "labels": [
+          "eq:a=1@1"
+        ],
+        "references": [
+          "Equation 1"
+        ],
+        "issues": []
+      }
+    },
+    {
+      "name": "Separate counters",
+      "acceptance": "A2",
+      "args": [
+        "![A](a.png){#fig:a}\n\n$$\nx=1\n$$\n{#eq:a}\n\n$$y=2$$\n{#eq:b}\n\n@eq:a and @eq:b and @fig:a."
+      ],
+      "expected": {
+        "labels": [
+          "fig:a=1@1",
+          "eq:a=1@3",
+          "eq:b=2@8"
+        ],
+        "references": [
+          "Equation 1",
+          "Equation 2",
+          "Figure 1"
+        ],
+        "issues": []
+      }
+    },
+    {
+      "name": "Equation label on closing line is unsupported",
+      "acceptance": "A8",
+      "args": [
+        "$$\nx=1\n$${#eq:a}\n\n@eq:a"
+      ],
+      "expected": {
+        "labels": [],
+        "references": [
+          "@eq:a"
+        ],
+        "issues": [
+          "unsupported:eq:a@3",
+          "missing:eq:a@5"
+        ]
+      }
+    },
+    {
+      "name": "Forward figure reference",
+      "acceptance": "A3",
+      "args": [
+        "See @fig:a.\n\n![A](a.png){#fig:a}"
+      ],
+      "expected": {
+        "labels": [
+          "fig:a=1@3"
+        ],
+        "references": [
+          "Figure 1"
+        ],
+        "issues": []
+      }
+    },
+    {
+      "name": "Forward equation reference",
+      "acceptance": "A3",
+      "args": [
+        "See @eq:a.\n\n$$\nx=1\n$$\n{#eq:a}"
+      ],
+      "expected": {
+        "labels": [
+          "eq:a=1@3"
+        ],
+        "references": [
+          "Equation 1"
+        ],
+        "issues": []
+      }
+    },
+    {
+      "name": "Duplicate figure labels",
+      "acceptance": "A4",
+      "args": [
+        "![A](a.png){#fig:a}\n\n![A](a.png){#fig:a}\n\n@fig:a"
+      ],
+      "expected": {
+        "labels": [
+          "fig:a=1@1",
+          "fig:a=2@3"
+        ],
+        "references": [
+          "@fig:a"
+        ],
+        "issues": [
+          "duplicate:fig:a@1",
+          "duplicate:fig:a@3"
+        ]
+      }
+    },
+    {
+      "name": "Duplicate equation labels",
+      "acceptance": "A4",
+      "args": [
+        "$$\nx=1\n$$\n{#eq:a}\n\n$$\nx=1\n$$\n{#eq:a}\n\n@eq:a"
+      ],
+      "expected": {
+        "labels": [
+          "eq:a=1@1",
+          "eq:a=2@6"
+        ],
+        "references": [
+          "@eq:a"
+        ],
+        "issues": [
+          "duplicate:eq:a@1",
+          "duplicate:eq:a@6"
+        ]
+      }
+    },
+    {
+      "name": "Missing figure target",
+      "acceptance": "A5",
+      "args": [
+        "See @fig:missing."
+      ],
+      "expected": {
+        "labels": [],
+        "references": [
+          "@fig:missing"
+        ],
+        "issues": [
+          "missing:fig:missing@1"
+        ]
+      }
+    },
+    {
+      "name": "Missing equation target",
+      "acceptance": "A5",
+      "args": [
+        "See @eq:missing."
+      ],
+      "expected": {
+        "labels": [],
+        "references": [
+          "@eq:missing"
+        ],
+        "issues": [
+          "missing:eq:missing@1"
+        ]
+      }
+    },
+    {
+      "name": "Fenced code",
+      "acceptance": "A6",
+      "args": [
+        "```md\n![A](a.png){#fig:a}\n@fig:a\n```"
+      ],
+      "expected": {
+        "labels": [],
+        "references": [],
+        "issues": []
+      }
+    },
+    {
+      "name": "Tilde fenced code",
+      "acceptance": "A6",
+      "args": [
+        "~~~\n![A](a.png){#fig:a}\n@fig:a\n~~~"
+      ],
+      "expected": {
+        "labels": [],
+        "references": [],
+        "issues": []
+      }
+    },
+    {
+      "name": "Inline code",
+      "acceptance": "A6",
+      "args": [
+        "![A](a.png){#fig:a}\n\n`@fig:a` and ``@fig:a``"
+      ],
+      "expected": {
+        "labels": [
+          "fig:a=1@1"
+        ],
+        "references": [],
+        "issues": []
+      }
+    },
+    {
+      "name": "URL reference",
+      "acceptance": "A6",
+      "args": [
+        "![A](a.png){#fig:a}\n\nhttps://example.test/@fig:a www.example.test/@fig:a"
+      ],
+      "expected": {
+        "labels": [
+          "fig:a=1@1"
+        ],
+        "references": [],
+        "issues": []
+      }
+    },
+    {
+      "name": "Link text and destination",
+      "acceptance": "A6",
+      "args": [
+        "![A](a.png){#fig:a}\n\n[@fig:a](https://example.test/@fig:a)"
+      ],
+      "expected": {
+        "labels": [
+          "fig:a=1@1"
+        ],
+        "references": [],
+        "issues": []
+      }
+    },
+    {
+      "name": "Indented code",
+      "acceptance": "A6",
+      "args": [
+        "    ![A](a.png){#fig:a}\n    @fig:a"
+      ],
+      "expected": {
+        "labels": [],
+        "references": [],
+        "issues": []
+      }
+    },
+    {
+      "name": "YAML and comment",
+      "acceptance": "A6",
+      "args": [
+        "---\nref: @fig:a\n---\n<!-- ![A](a.png){#fig:a} @fig:a -->"
+      ],
+      "expected": {
+        "labels": [],
+        "references": [],
+        "issues": []
+      }
+    },
+    {
+      "name": "New preceding figure",
+      "acceptance": "A7",
+      "args": [
+        "![B](b.png){#fig:b}\n\n![A](a.png){#fig:a}\n\n@fig:a"
+      ],
+      "expected": {
+        "labels": [
+          "fig:b=1@1",
+          "fig:a=2@3"
+        ],
+        "references": [
+          "Figure 2"
+        ],
+        "issues": []
+      }
+    },
+    {
+      "name": "Original figure number",
+      "acceptance": "A7",
+      "args": [
+        "![A](a.png){#fig:a}\n\n@fig:a"
+      ],
+      "expected": {
+        "labels": [
+          "fig:a=1@1"
+        ],
+        "references": [
+          "Figure 1"
+        ],
+        "issues": []
+      }
+    },
+    {
+      "name": "Inline image unsupported",
+      "acceptance": "A8",
+      "args": [
+        "Text ![A](a.png){#fig:a}\n@fig:a"
+      ],
+      "expected": {
+        "labels": [],
+        "references": [
+          "@fig:a"
+        ],
+        "issues": [
+          "unsupported:fig:a@1",
+          "missing:fig:a@2"
+        ]
+      }
+    },
+    {
+      "name": "Figure grid unsupported",
+      "acceptance": "A8",
+      "args": [
+        "![A](a.png){#fig:a} ![B](b.png){#fig:b}"
+      ],
+      "expected": {
+        "labels": [],
+        "references": [],
+        "issues": [
+          "unsupported:fig:a@1",
+          "unsupported:fig:b@1"
+        ]
+      }
+    },
+    {
+      "name": "Section label unsupported",
+      "acceptance": "A8",
+      "args": [
+        "# Heading {#sec:a}"
+      ],
+      "expected": {
+        "labels": [],
+        "references": [],
+        "issues": [
+          "unsupported:sec:a@1"
+        ]
+      }
+    },
+    {
+      "name": "Subfigure label unsupported",
+      "acceptance": "A8",
+      "args": [
+        "::: {#fig:group}\n![A](a.png){#fig:a}\n:::"
+      ],
+      "expected": {
+        "labels": [],
+        "references": [],
+        "issues": [
+          "unsupported:fig:group@1",
+          "unsupported:fig:a@2"
+        ]
+      }
+    },
+    {
+      "name": "Aligned equation unsupported",
+      "acceptance": "A8",
+      "args": [
+        "$$\n\\begin{align}x&=1\\end{align}\n$$\n{#eq:a}"
+      ],
+      "expected": {
+        "labels": [],
+        "references": [],
+        "issues": [
+          "unsupported:eq:a@4"
+        ]
+      }
+    },
+    {
+      "name": "Plain note is unchanged",
+      "acceptance": "A9",
+      "args": [
+        "# Draft\n\nNo labels in this note."
+      ],
+      "expected": {
+        "labels": [],
+        "references": [],
+        "issues": []
+      }
+    },
+    {
+      "name": "Preview preserves source input",
+      "acceptance": "A9",
+      "args": [
+        "![A](a.png){#fig:a}\n\nSee @fig:a."
+      ],
+      "expected": {
+        "labels": [
+          "fig:a=1@1"
+        ],
+        "references": [
+          "Figure 1"
+        ],
+        "issues": []
+      }
+    },
+    {
+      "name": "Case sensitive label",
+      "acceptance": "A5",
+      "args": [
+        "![A](a.png){#fig:a}\n\n@fig:A"
+      ],
+      "expected": {
+        "labels": [
+          "fig:a=1@1"
+        ],
+        "references": [
+          "@fig:A"
+        ],
+        "issues": [
+          "missing:fig:A@3"
+        ]
+      }
+    },
+    {
+      "name": "Inline math is protected",
+      "acceptance": "A6",
+      "args": [
+        "![A](a.png){#fig:a}\n\n$@fig:a$"
+      ],
+      "expected": {
+        "labels": [
+          "fig:a=1@1"
+        ],
+        "references": [],
+        "issues": []
+      }
+    },
+    {
+      "name": "Escaped reference is protected",
+      "acceptance": "A6",
+      "args": [
+        "![A](a.png){#fig:a}\n\n\\@fig:a"
+      ],
+      "expected": {
+        "labels": [
+          "fig:a=1@1"
+        ],
+        "references": [],
+        "issues": []
+      }
+    },
+    {
+      "name": "Unclosed fence is protected",
+      "acceptance": "A6",
+      "args": [
+        "```\n![A](a.png){#fig:a}\n@fig:a"
+      ],
+      "expected": {
+        "labels": [],
+        "references": [],
+        "issues": []
+      }
+    },
+    {
+      "name": "CRLF source positions",
+      "acceptance": "A1",
+      "args": [
+        "![A](a.png){#fig:a}\r\n\r\n@fig:a"
+      ],
+      "expected": {
+        "labels": [
+          "fig:a=1@1"
+        ],
+        "references": [
+          "Figure 1"
+        ],
+        "issues": []
+      }
+    },
+    {
+      "name": "URL query before a valid reference",
+      "acceptance": "A6",
+      "args": [
+        "![A](a.png){#fig:a}\n\nhttps://example.test/?ref=@fig:a and @fig:a."
+      ],
+      "expected": {
+        "labels": [
+          "fig:a=1@1"
+        ],
+        "references": [
+          "Figure 1"
+        ],
+        "issues": []
+      }
+    }
+  ]
+}
