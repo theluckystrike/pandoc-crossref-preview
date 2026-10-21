@@ -1,0 +1,27 @@
+{
+	"id": "pandoc-crossref-preview",
+	"name": "Pandoc Crossref Preview",
+	"version": "1.1.0",
+	"changes": [
+		"New Send feedback command. It opens a page where you can report a problem or suggest an idea."
+	],
+	"tip": "Select a resolved figure or equation number to switch to source mode at its target line.",
+	"thanks": "Hi, I am Michael, a solo developer in Poland. Pandoc Crossref Preview is one of over 100 small plugins that I make. Thank you for using it in your writing.",
+	"related": [
+		{
+			"id": "shared-tex-preamble",
+			"name": "Shared TeX Preamble",
+			"blurb": "Load TeX commands from one vault file and use them in math notes on phones and tablets."
+		},
+		{
+			"id": "bibliography-path-audit",
+			"name": "Bibliography Path Audit",
+			"blurb": "Find invalid local bibliography paths saved in citation tool settings."
+		},
+		{
+			"id": "callout-table-footnotes",
+			"name": "Footnotes in Callouts and Tables",
+			"blurb": "Open numbered footnotes in callouts and table cells."
+		}
+	]
+}

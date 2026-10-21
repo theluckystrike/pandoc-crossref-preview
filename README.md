@@ -76,6 +76,8 @@ Labels are case sensitive. Use letters, digits, the underscore character, dots a
 
 ## Settings
 
+After a minor or major update, this plugin opens one What's new tab in the background. The tab and settings card suggest other NoteMods plugins and Zovo Chat and link to notemods.com for feedback ([privacy](https://notemods.com/privacy/)). The tab sends no data. Turn the tab off in Settings.
+
 Figure prefix and Equation prefix control text before the reference number. Prefixes have a limit of 40 characters. First figure number and First equation number accept values from 1 to 99999; saved values are rounded and limited to that range. Empty prefixes return to the default values. Reopen Reading view after a setting change.
 
 The Sponsors rows show sign in, status, refresh and sign out controls. Saved profiles are available through the command palette and plugin settings. No default hotkey is assigned.

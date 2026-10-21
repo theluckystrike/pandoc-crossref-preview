@@ -3,6 +3,7 @@ import { sponsorsSettingItems } from './license/github-obsidian';
 import { DEFAULT_PROFILE, type Profile } from './indexer';
 import { PRO_UI } from './pro';
 import type PandocCrossrefPreviewPlugin from './main';
+import { helloSettingItems } from './hello/settings';
 export interface SavedProfile { name: string; profile: Profile }
 export interface PandocCrossrefPreviewSettings extends Profile { profiles: SavedProfile[] }
 export const DEFAULT_SETTINGS: PandocCrossrefPreviewSettings = { ...DEFAULT_PROFILE, profiles: [] };
@@ -25,6 +26,11 @@ export class PandocCrossrefPreviewSettingTab extends PluginSettingTab {
 	plugin: PandocCrossrefPreviewPlugin;
 	constructor(app: ConstructorParameters<typeof PluginSettingTab>[0], plugin: PandocCrossrefPreviewPlugin) { super(app, plugin); this.plugin = plugin; }
 	getSettingDefinitions(): SettingDefinitionItem[] {
+		// The product rows, then the "More from NoteMods" card (packages/hello).
+		return [...this.productSettingDefinitions(), ...helloSettingItems()];
+	}
+
+	productSettingDefinitions(): SettingDefinitionItem[] {
 		return [
 			...(this.plugin.pro ? sponsorsSettingItems(this.plugin.pro, PRO_UI) : []),
 			...(['figurePrefix', 'equationPrefix'] as const).map((key) => ({ name: key === 'figurePrefix' ? 'Figure prefix' : 'Equation prefix', desc: 'Text before the reference number. Reopen Reading view after a change.', control: { type: 'text' as const, key, defaultValue: DEFAULT_PROFILE[key] } })),

@@ -5,6 +5,8 @@ import { buildIndex, reportText, targetText, type NoteIndex, type Profile, type 
 import { renderReferences } from './render';
 import { SPONSORS, bindPro, isPro, resetPro } from './pro';
 import { DEFAULT_SETTINGS, PandocCrossrefPreviewSettingTab, normalizeProfile, normalizeSettings, type PandocCrossrefPreviewSettings } from './settings';
+import { setupHello } from './hello/index';
+import WHATS_NEW from './whats-new.json';
 export default class PandocCrossrefPreviewPlugin extends Plugin {
 	settings: PandocCrossrefPreviewSettings = { ...DEFAULT_SETTINGS, profiles: [] };
 	pro: SponsorsManager | null = null;
@@ -12,6 +14,8 @@ export default class PandocCrossrefPreviewPlugin extends Plugin {
 	private profileModal: Modal | null = null;
 	private lastIndex: { source: string; key: string; index: NoteIndex } | null = null;
 	async onload(): Promise<void> {
+		// First: "What's new" reads its state before the settings load (packages/hello). It does not wait.
+		setupHello(this, WHATS_NEW);
 		await this.loadSettings();
 		const pro = createGitHubSponsors(this.app, this.manifest.id, SPONSORS, this); pro.init(); this.pro = pro; bindPro(pro);
 		const tab = new PandocCrossrefPreviewSettingTab(this.app, this); this.addSettingTab(tab);
