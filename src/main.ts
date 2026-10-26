@@ -3,7 +3,7 @@ import type { SponsorsManager } from './license/index';
 import { createGitHubSponsors } from './license/github-obsidian';
 import { buildIndex, reportText, targetText, type NoteIndex, type Profile, type Target } from './indexer';
 import { renderReferences } from './render';
-import { SPONSORS, bindPro, isPro, resetPro } from './pro';
+import { SPONSORS, bindPro, isPro, resetPro, proNotice } from './pro';
 import { DEFAULT_SETTINGS, PandocCrossrefPreviewSettingTab, normalizeProfile, normalizeSettings, type PandocCrossrefPreviewSettings } from './settings';
 import { setupHello } from './hello/index';
 import WHATS_NEW from './whats-new.json';
@@ -62,7 +62,7 @@ export default class PandocCrossrefPreviewPlugin extends Plugin {
 		modal.contentEl.createEl('p', { text: 'Supported scope: standalone images and simple display equations in this note.' }); modal.open();
 	}
 	async saveReport(): Promise<string | null> {
-		if (!isPro()) { new Notice('Local label reports need pro. The on-screen report is free.'); return null; }
+		if (!isPro()) { proNotice('Local label reports need pro. The on-screen report is free.'); return null; }
 		const file = this.app.workspace.getActiveFile(); if (!file || file.extension !== 'md') return null;
 		try {
 			const text = reportText(file.path, buildIndex(await this.app.vault.read(file), this.profile()), this.profile());
@@ -88,7 +88,7 @@ export default class PandocCrossrefPreviewPlugin extends Plugin {
 	}
 	showProfiles(): void {
 		this.closeDialogs();
-		if (!isPro()) { new Notice('Saved number and prefix profiles need pro. Current prefixes and numbers are free.'); return; }
+		if (!isPro()) { proNotice('Saved number and prefix profiles need pro. Current prefixes and numbers are free.'); return; }
 		const modal = new Modal(this.app); this.profileModal = modal; modal.setTitle('Number profiles (pro)');
 		modal.contentEl.createEl('p', { text: 'Save the current prefixes and first numbers. Open the project note, load a profile, then reopen reading view.' });
 		const input = modal.contentEl.createEl('input', { attr: { type: 'text', placeholder: 'Project name', 'aria-label': 'Project name', maxlength: '60' } });

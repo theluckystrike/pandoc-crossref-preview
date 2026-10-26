@@ -1,9 +1,9 @@
 {
 	"id": "pandoc-crossref-preview",
 	"name": "Pandoc Crossref Preview",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"changes": [
-		"New Send feedback command. It opens a page where you can report a problem or suggest an idea."
+		"The Pro notice for number profiles and label reports now has a Sponsor on GitHub button."
 	],
 	"tip": "Select a resolved figure or equation number to switch to source mode at its target line.",
 	"thanks": "Hi, I am Michael, a solo developer in Poland. Pandoc Crossref Preview is one of over 100 small plugins that I make. Thank you for using it in your writing.",

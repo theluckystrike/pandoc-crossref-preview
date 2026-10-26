@@ -1,5 +1,11 @@
 # pandoc-crossref-preview
 
+## 1.1.1
+
+### Patch Changes
+
+- The Pro notice for number profiles and label reports now has a Sponsor on GitHub button.
+
 ## 1.1.0
 
 ### Minor Changes
