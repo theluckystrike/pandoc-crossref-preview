@@ -1,9 +1,9 @@
 {
 	"id": "pandoc-crossref-preview",
 	"name": "Pandoc Crossref Preview",
-	"version": "1.1.1",
+	"version": "1.1.2",
 	"minAppVersion": "1.13.4",
-	"description": "Show figure and equation reference numbers from Pandoc labels while you read a note.",
+	"description": "Show equation numbering and figure references as numbers from Pandoc labels while you read a note. Select a number to open the source line of its target.",
 	"author": "Michael Lip",
 	"authorUrl": "https://github.com/theluckystrike",
 	"fundingUrl": "https://github.com/sponsors/theluckystrike",

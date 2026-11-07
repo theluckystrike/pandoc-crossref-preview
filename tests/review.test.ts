@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { previewSummary } from '../src/indexer';
+import { pairedRatio } from './growth';
 const fig = '![A](a.png){#fig:a}\n\n';
 describe('Review defects', () => {
 	it('counts references in nested list items with tab or space indent', () => {
@@ -36,9 +37,16 @@ describe('Reading view index cache', () => {
 		const plugin = new Plugin(App.createConfigured__({ files: {} }) as never, { id: 'pandoc-crossref-preview' } as never);
 		const profile = indexer.DEFAULT_PROFILE;
 		const first = plugin.indexFor(big, profile);
-		const start = performance.now();
 		for (let n = 0; n < 2000; n++) expect(plugin.indexFor(big, profile)).toBe(first);
-		expect(performance.now() - start).toBeLessThan(500);
+		// Cache guard (s1101): 2,000 cached calls against one parse of the same note, timed in this test.
+		// Measured on the agent Mac 2026-11-01: ratio 0.029 to 0.031 (about 0.6 ms against 19 to 21 ms). The limit is 3 times the highest ratio.
+		const g = pairedRatio(
+			() => indexer.buildIndex(big, profile),
+			() => {
+				for (let n = 0; n < 2000; n++) plugin.indexFor(big, profile);
+			},
+		);
+		expect(g.ratio, g.text).toBeLessThan(0.09);
 		expect(first.targets).toHaveLength(5000);
 		expect(plugin.indexFor(`${big}\nMore.`, profile)).not.toBe(first);
 		expect(plugin.indexFor(big, { ...profile, figureStart: 3 }).targets[0]!.number).toBe(3);

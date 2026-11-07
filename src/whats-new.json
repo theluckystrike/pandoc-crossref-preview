@@ -1,8 +1,9 @@
 {
 	"id": "pandoc-crossref-preview",
 	"name": "Pandoc Crossref Preview",
-	"version": "1.1.1",
+	"version": "1.1.2",
 	"changes": [
+		"The Pro notice of Pandoc Crossref Preview now says that one payment turns on Pro in every NoteMods plugin.",
 		"The Pro notice for number profiles and label reports now has a Sponsor on GitHub button."
 	],
 	"tip": "Select a resolved figure or equation number to switch to source mode at its target line.",
