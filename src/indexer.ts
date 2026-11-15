@@ -1,3 +1,4 @@
+import { replaceAlts, type Alt } from './no-lookbehind';
 /** The v1 grammar is deliberately limited to standalone Markdown images and simple display math. */
 export interface Target { id: string; kind: 'fig' | 'eq'; number: number; line: number }
 export interface Diagnostic { kind: 'duplicate' | 'missing' | 'unsupported'; id: string; line: number }
@@ -7,6 +8,8 @@ export interface Profile { figurePrefix: string; equationPrefix: string; figureS
 export const DEFAULT_PROFILE: Profile = { figurePrefix: 'Figure', equationPrefix: 'Equation', figureStart: 1, equationStart: 1 };
 const ID = '(?:fig|eq):[A-Za-z0-9_](?:[A-Za-z0-9_.-]*[A-Za-z0-9_-])?';
 export function referencePattern(): RegExp { return new RegExp(`(^|[^\\\\\\w@:/.-])@(${ID})(?![\\w:-])`, 'g'); }
+/** Inline math $...$ not after a backslash or a dollar (no lookbehind, iOS 16.3). */
+export const INLINE_MATH: Alt[] = [{ re: /\$(?:[^\s$\\]|[^\s$][^$\n]*?[^\s\\])\$(?!\d)/, notAfter: /[\\$]/ }];
 function blank(s: string): string { return s.replace(/[^\n]/g, ' '); }
 export function maskUrls(text: string): string { return text.replace(/(?:[a-z][a-z0-9+.-]*:\/\/|www\.)\S+/gi, blank); }
 
@@ -84,8 +87,9 @@ export function buildIndex(source: string, profile: Profile = DEFAULT_PROFILE): 
 		const line = lines[i]!;
 		if (!math.has(i)) {
 			const eligible = maskUrls(line.replace(/!?\[[^\]]*\]\([^)]*\)/g, blank).replace(/\[\[[^\]]*\]\]/g, blank))
-				.replace(/(?<![\\$])\$(?:[^\s$\\]|[^\s$][^$\n]*?[^\s\\])\$(?!\d)/g, blank);
-			for (const m of eligible.matchAll(referencePattern())) {
+				;
+			const eligibleText = replaceAlts(eligible, INLINE_MATH, (m) => blank(m.text));
+			for (const m of eligibleText.matchAll(referencePattern())) {
 				const id = m[2]!; references.push({ id, line: i + 1, offset: offset + m.index + m[1]!.length });
 				if (!counts.has(id)) diagnostics.push({ kind: 'missing', id, line: i + 1 });
 			}
